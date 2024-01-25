@@ -1,4 +1,5 @@
 const { UserModal, BookModal } = require("../modal/index");
+const issuedBook = require("../dtos/book-dto");
 
 exports.getAllBooks = async (req, res) => {
     const books = await BookModal.find();
@@ -35,7 +36,8 @@ exports.getSingleBookById = async (req, res) => {
 exports.getAllIssuedBooks = async (req, res) => {
     const users = await UserModal.find({
         issuedBook: { $exists: true }
-    }).populate("issuedBook")
+    }).populate("issuedBook");
+
     if (issuedBooks.length === 0) {
         return res.status(404).json({
             success: false,
@@ -46,6 +48,43 @@ exports.getAllIssuedBooks = async (req, res) => {
         success: true,
         message: "User with issued Books Found ✅",
         data: issuedBooks,
+    });
+};
+//DTO
+// const issuedBooks = users.map((each) => new IssuedBook(each));
+
+exports.addNewBook = async (req, res) => {
+    const { data } = req.body;
+    if (!data) {
+        returnres.statu(404).json({
+            success: true,
+            message: "Book data not found ! ! !",
+        });
+    }
+    await BookModal.create(data);
+    const allBooks = await BookModal.find();
+
+    return res.status(200).json({
+        success: true,
+        messsage: "BOOK added",
+        data: allBooks,
+    });
+};
+
+exports.updateBooksById = async (req, res) => {
+    const { id } = req.params;
+    const { data } = req.body;
+    const updateBook = await BookModal.findByIdAndUpdate({
+        _id: id,
+    }, data, {
+        new: true,   // to make database refreashed after updation
+    }
+    );
+
+    return res.status(200).json({
+        succed: true,
+        message: "Updated Book",
+        data: updateBook,
     });
 };
 
