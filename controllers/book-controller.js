@@ -56,7 +56,7 @@ exports.getAllIssuedBooks = async (req, res) => {
 exports.addNewBook = async (req, res) => {
     const { data } = req.body;
     if (!data) {
-        returnres.statu(404).json({
+        return res.status(404).json({
             success: true,
             message: "Book data not found ! ! !",
         });

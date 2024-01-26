@@ -1,6 +1,7 @@
 const express = require("express");
 const { users } = require('../data/users.json');
 // const { books } = require("../data/books.json");
+const { getAllUsers, getSingleUser, addNewUser } = require("../controllers/user-controller");
 
 const { UserModal, BookModal } = require("../modal/index");
 
@@ -15,22 +16,7 @@ const router = express.Router();
   * Access:Public
   * Parameters:Id
  */
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-    const user = users.find((each) => each.id === id);
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: "User not found ❌❌❌",
-        });
-    }
-    return res.status(200).json({
-        success: true,
-        message: "User Found ✅",
-        data: user
-    })
-});
-
+router.get("/:id", getSingleUser);
 
 
 /**
@@ -40,13 +26,14 @@ router.get("/:id", (req, res) => {
   * Access:Public
   * Parameters:none
  */
-//http://localhost:8081/users
-router.get("/", (req, res) => {
-    res.status(200).json({
-        success: true,
-        data: users
-    });
-});
+router.get("/", getAllUsers);
+
+// router.get("/", (req, res) => {
+//     res.status(200).json({
+//         success: true,
+//         data: users
+//     });
+// });
 
 /**
   * Route: /users
@@ -55,29 +42,30 @@ router.get("/", (req, res) => {
   * Access:Public
   * Parameters: None
  */
-router.post("/", (req, res) => {
-    const { id, name, surname, email, subscriptionType, subscritionDate } = req.body;
-    const user = users.find((each) => each.id == id);
-    if (user) {
-        return res.status(404).json({
-            success: false,
-            message: "User with the ID exist",
-        });
-    }
-    users.push({
-        id,
-        name,
-        surname,
-        email,
-        subscriptionType,
-        subscritionDate,
-    });
-    return res.status(201).json({
-        success: true,
-        message: "User Added Successfully✅",
-        data: users,
-    });
-});
+router.post("/", addNewUser);
+// router.post("/", (req, res) => {
+//     const { id, name, surname, email, subscriptionType, subscritionDate } = req.body;
+//     const user = users.find((each) => each.id == id);
+//     if (user) {
+//         return res.status(404).json({
+//             success: false,
+//             message: "User with the ID exist",
+//         });
+//     }
+//     users.push({
+//         id,
+//         name,
+//         surname,
+//         email,
+//         subscriptionType,
+//         subscritionDate,
+//     });
+//     return res.status(201).json({
+//         success: true,
+//         message: "User Added Successfully✅",
+//         data: users,
+//     });
+// });
 
 /**
   * Route: /users/:id
